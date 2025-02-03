@@ -1,0 +1,93 @@
+<configuration status="debug" name="baeldung">
+
+  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- encoders are  by default assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} %msg%n</pattern>
+    </encoder>
+  </appender>
+  <appender name="tcp" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>TCP %date %level [%thread] %logger{10} %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="serverMonitorListener" class="ch.qos.logback.core.FileAppender">
+    <file>logs/server-monitor-listener.log</file>
+    <encoder>
+      <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="driver" class="ch.qos.logback.core.FileAppender">
+    <file>logs/driverNoRotation.log</file>
+    <encoder>
+      <pattern>%date %level [%thread] %logger{10} %msg%n</pattern>
+    </encoder>
+  </appender>
+
+<!--  <appender name="driver" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--    <file>logs/driverLogs/driver.log</file>-->
+
+<!--    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--      &lt;!&ndash; hourly folder, rollover per minute&ndash;&gt;-->
+<!--      <fileNamePattern>logs/driverLogs/%d{yyyy-MM-dd-HH, aux}/driver.%d{yyyy-MM-dd-HH-mm}.log</fileNamePattern>-->
+
+<!--    </rollingPolicy>-->
+<!--    <encoder>-->
+<!--      <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>-->
+<!--    </encoder>-->
+<!--  </appender>-->
+  <appender name="consoleErrors" class="ch.qos.logback.core.ConsoleAppender">
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>WARN</level>
+    </filter>
+    <encoder>
+      <pattern>ERROR %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} %msg%n</pattern>
+    </encoder>
+  </appender>
+  <appender name="verboseTimings" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>TIMINGS %date %level [%thread] %logger{10} %msg%n</pattern>
+    </encoder>
+  </appender>
+  <appender name="sdam" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>SDAM %date %level [%thread] %logger{10} %msg%n</pattern>
+    </encoder>
+  </appender>
+  <appender name="monitor" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>MONITOR %date %level [%thread] %logger{10} %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="monitor" level="trace">
+    <appender-ref ref="monitor"/>
+  </logger>
+  <logger name="socket" level="trace">
+    <appender-ref ref="tcp"/>
+  </logger>
+
+  <logger name="server-monitor-listener" level="info">
+    <!-- <appender-ref ref="stdout"/> -->
+    <appender-ref ref="serverMonitorListener"/>
+  </logger>
+
+  <logger name="timings" level="trace">
+    <appender-ref ref="consoleErrors"/>
+  </logger>
+
+  <logger name="org.mongodb.driver" level="debug">
+    <appender-ref ref="driver"/>
+  </logger>
+  <logger name="org.mongodb.driver.cluster" level="debug">
+    <appender-ref ref="sdam"/>
+  </logger>
+
+  <root level="error">
+    <appender-ref ref="consoleErrors"/>
+    <appender-ref ref="fileErrors"/>
+  </root>
+</configuration>
